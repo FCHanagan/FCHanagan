@@ -18,11 +18,12 @@ struct Scor {
 }
 
 
-//////////////////////////////////////////////////////////////////
+////////p//////////////////////////////////////////////////////////
 // display_table                                                // 
 //////////////////////////////////////////////////////////////////
-fn  display_table(my_array: &[&str]) {
-    
+  
+ fn display_table(my_array: &[Scor]) {
+            
     let mut window: PistonWindow = WindowSettings::new(
             "High Scores Table",
             [400, 550]
@@ -38,23 +39,27 @@ fn  display_table(my_array: &[&str]) {
     
     window.set_lazy(true);
     
+
     while let Some(e) = window.next() {
     
         window.draw_2d(&e, |c, g, device| {
       
-         for inx in 0..10 {
+           for inx in 0..my_array.len() {
+        
+           
+              let tss = my_array[inx].y.to_string() + "   ------>  " +
+                       &my_array[inx].x.to_string();
 
-           let transform = c.transform.trans(50.0, 50.0 + 50.0 * (inx as f64));
+              let transform = c.transform.trans(50.0, 50.0 + 50.0 * (inx as f64));
 
-            text::Text::new_color([0.0, 1.0, 0.0, 1.0], 32).draw(
-                my_array[inx],              
+              text::Text::new_color([0.0, 1.0, 0.0, 1.0], 32).draw(
+                &tss,                          
                 &mut glyphs,
                 &c.draw_state,
                 transform, g
-            ).unwrap();
+              ).unwrap();
            
           }   
-            // Update glyphs before rendering.
             glyphs.factory.encoder.flush(device);
         });
     }
@@ -69,7 +74,14 @@ fn  display_table(my_array: &[&str]) {
    
     let _file = std::fs::File::create(s).expect("create failed");       
 }
-   
+
+////////////////////////////////////////////////////////////////
+//      print_vec
+////////////////////////////////////////////////////////////////
+ fn print_vec(v: &[Scor]) {
+    println!("{:?}", v);
+}
+  
 //////////////////////////////////////////////////////////////////
 // read_data_buffered                                           // 
 //////////////////////////////////////////////////////////////////
@@ -128,40 +140,22 @@ fn read_data_buffered(s: &String) {
      }
 
      
-    let mut my_array = ["--","--", "--", "--", "--", "--", "--", "--", "--", "--"];
+      println!("   {:?} ",v);
+
+      let mut my_array = ["--","--", "--", "--", "--", "--", "--", "--", "--", "--"];
      
-  //   println!("{:?}", my_array);
+      println!("{:?}", my_array);
+  
+      let slice =  &mut my_array[0..10];
 
-       
+      let binding0 =  v[0].x.to_string() + "  ----->  " +  &v[0].y;
+      let binding1 =  v[1].x.to_string() + "  ----->  " +  &v[1].y;
 
-/*
-     let binding = 0; 
 
-     for ix in 0..v.len() {
+      
+    // print_vec(&v.as_slice());
 
-        let binding = v[ix].x.to_string() + "  ----->  " +  &v[ix].y;
 
-        my_array[ix] = &binding;
-     }
-*/
-   /*  
-     let icount = 0;
-     
-   //  let binding = " ";
-     
-     let binding = v[icount].x.to_string() + "  ----->   " +  &v[icount].y;
-     
-     my_array[icount] = &binding;
-
-     
-     for icn in 0..v.len() {
-        
-         let binding = v[icn].x.to_string() + "  ----->   " +  &v[icn].y;
-
-         my_array[icn] = &binding;   
-     }
-   
-     */
 
      println!("Vector length: {}", v.len());
 
@@ -175,14 +169,16 @@ fn read_data_buffered(s: &String) {
      
      for ix in 0..v.len() {
       
-      // my_array[ix] = v[ix].x.to_string() + "  ----->   " +  &v[ix].y; 
+     //  let my_array[0] = &(v[0].x.to_string() + "  ----->   " +  &v[0].y); 
        f.write_all(v[ix].x.to_string().as_bytes()).expect("Unable to write data");
        f.write_all("\n".to_string().as_bytes()).expect("Unable to write data");
        f.write_all(v[ix].y.to_string().as_bytes()).expect("Unable to write data");
        f.write_all("\n".to_string().as_bytes()).expect("Unable to write data");     
      }
  
-       display_table(&my_array);
+      // display_table(&my_array);
+      // display_table(&my_array);
+        display_table(&v.as_slice()); 
 
 }           
  
